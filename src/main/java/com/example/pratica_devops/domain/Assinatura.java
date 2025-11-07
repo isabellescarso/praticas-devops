@@ -42,4 +42,9 @@ public class Assinatura {
     public int hashCode() {
         return Objects.hash(premium, ativa);
     }
+
+    @Override
+    public String toString() {
+        return String.format("Assinatura{premium=%s, ativa=%s}", premium, ativa);
+    }
 }

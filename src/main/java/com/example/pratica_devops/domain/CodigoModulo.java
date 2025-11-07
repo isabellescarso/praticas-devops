@@ -35,4 +35,9 @@ public class CodigoModulo {
     public int hashCode() {
         return Objects.hash(codigo);
     }
+
+    @Override
+    public String toString() {
+        return String.format("CodigoModulo{codigo=%s}", codigo);
+    }
 }

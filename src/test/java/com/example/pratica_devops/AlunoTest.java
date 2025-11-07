@@ -5,8 +5,92 @@ import org.junit.jupiter.api.Test;
 
 import com.example.pratica_devops.domain.Aluno;
 import com.example.pratica_devops.domain.Modulo;
+import com.example.pratica_devops.domain.Assinatura;
+import com.example.pratica_devops.domain.CodigoModulo;
 
 public class AlunoTest {
+
+    @Test
+    void testConstrutorComAssinatura() {
+        Assinatura assinatura = new Assinatura(true, true);
+        Aluno aluno = new Aluno(assinatura);
+        assertEquals(assinatura, aluno.getAssinatura(), "A assinatura deve ser a mesma passada no construtor");
+    }
+
+    @Test
+    void testConstrutorComPremium() {
+        Aluno aluno = new Aluno(true);
+        assertTrue(aluno.getAssinatura().isPremium(), "Assinatura deve ser premium");
+        assertTrue(aluno.getAssinatura().isAtiva(), "Assinatura deve estar ativa por padrão");
+    }
+
+    @Test
+    void testSetAndGetId() {
+        Aluno aluno = new Aluno(true);
+        Long id = 1L;
+        aluno.setId(id);
+        assertEquals(id, aluno.getId(), "O ID deve ser o mesmo que foi definido");
+    }
+
+    @Test
+    void testSetAndGetAssinatura() {
+        Aluno aluno = new Aluno(true);
+        Assinatura novaAssinatura = new Assinatura(false, true);
+        aluno.setAssinatura(novaAssinatura);
+        assertEquals(novaAssinatura, aluno.getAssinatura(), "A assinatura deve ser atualizada");
+    }
+
+    @Test
+    void testSetAssinaturaAtiva_ComAssinaturaExistente() {
+        Aluno aluno = new Aluno(false);
+        aluno.setAssinaturaAtiva(true);
+        assertFalse(aluno.getAssinatura().isPremium(), "Deve manter o status premium original");
+        assertTrue(aluno.getAssinatura().isAtiva(), "Deve atualizar o status ativo");
+    }
+
+    @Test
+    void testModuloNulo() {
+        Aluno aluno = new Aluno(true);
+        assertFalse(aluno.isElegivelParaProjetosReais(null), 
+            "Aluno não deve ser elegível quando módulo é nulo");
+    }
+
+    @Test
+    void testModuloComCodigoModulo() {
+        Aluno aluno = new Aluno(true);
+        CodigoModulo codigoModulo = new CodigoModulo("M1");
+        Modulo modulo = new Modulo(codigoModulo, true);
+        assertTrue(aluno.isElegivelParaProjetosReais(modulo),
+            "Aluno deve ser elegível com código de módulo válido");
+    }
+
+    @Test
+    void testSetAndGetCodigoModulo() {
+        Modulo modulo = new Modulo("M1", true);
+        CodigoModulo novoCodigoModulo = new CodigoModulo("M2");
+        modulo.setCodigoModulo(novoCodigoModulo);
+        assertEquals(novoCodigoModulo, modulo.getCodigoModulo(),
+            "Código do módulo deve ser atualizado");
+        assertEquals("M2", modulo.getCodigo(),
+            "Getter de conveniência deve retornar o código correto");
+    }
+
+    @Test
+    void testModuloSetAndGetValido() {
+        Modulo modulo = new Modulo("M1", true);
+        assertTrue(modulo.isValido(), "Módulo deve iniciar como válido");
+        
+        modulo.setValido(false);
+        assertFalse(modulo.isValido(), "Módulo deve ser marcado como inválido");
+    }
+
+    @Test
+    void testModuloSetAndGetId() {
+        Modulo modulo = new Modulo("M1", true);
+        Long id = 1L;
+        modulo.setId(id);
+        assertEquals(id, modulo.getId(), "ID do módulo deve ser atualizado corretamente");
+    }
 
     @Test
     void dadoAlunoComPremiumAtivo_quandoCursandoModuloValido_entaoDeveSerElegivel() {

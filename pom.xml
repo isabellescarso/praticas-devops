@@ -97,6 +97,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Mockito -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- SpringDoc OpenAPI UI -->
         <dependency>
             <groupId>org.springdoc</groupId>
