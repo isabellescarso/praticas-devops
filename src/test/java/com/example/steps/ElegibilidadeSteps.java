@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.pratica_devops.domain.Aluno;
-import com.example.pratica_devops.domain.ElegibilidadeService;
+import com.example.pratica_devops.service.ElegibilidadeService;
 import com.example.pratica_devops.domain.Modulo;
 
 import io.cucumber.java.pt.Dado;

@@ -68,10 +68,9 @@ public class AlunoTest {
         assertFalse(aluno.isElegivelParaProjetosReais(moduloInvalido),
             "Aluno premium com módulo inválido não deveria ser elegível.");
 
-        // Cenário 2: código nulo
-        Modulo moduloCodigoNulo = new Modulo(null, true);
-        assertFalse(aluno.isElegivelParaProjetosReais(moduloCodigoNulo),
-            "Aluno premium com módulo de código nulo não deveria ser elegível.");
+        // Cenário 2: módulo nulo
+        assertFalse(aluno.isElegivelParaProjetosReais(null),
+            "Aluno premium com módulo nulo não deveria ser elegível.");
     }
 
 

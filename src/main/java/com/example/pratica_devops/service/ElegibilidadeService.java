@@ -1,7 +1,10 @@
-package com.example.pratica_devops.domain;
+package com.example.pratica_devops.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.pratica_devops.domain.Aluno;
+import com.example.pratica_devops.domain.Modulo;
 
 public class ElegibilidadeService {
     private List<Aluno> alunosElegiveis = new ArrayList<>();
@@ -25,3 +28,5 @@ public class ElegibilidadeService {
         alunosElegiveis.clear();
     }
 }
+
+
