@@ -11,15 +11,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.pratica_devops.DTO.AlunoDTO;
 import com.example.pratica_devops.service.AlunoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/alunos")
+@Tag(name = "Alunos", description = "API para gerenciamento de alunos")
 public class AlunoController {
 
     @Autowired
     private AlunoService alunoService;
 
     @GetMapping
+    @Operation(summary = "Lista todos os alunos", description = "Retorna uma lista com todos os alunos cadastrados")
     public List<AlunoDTO> getAlunos() {
         return alunoService.getAllAlunos(); // Chama o serviço para obter os dados
     }
