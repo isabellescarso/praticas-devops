@@ -1,11 +1,16 @@
 package com.example.pratica_devops.domain;
 
 import java.util.Objects;
+
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
 
 @Embeddable
 public class CodigoModulo {
 
+    @Getter
+    @Setter
     private String codigo;
 
     // Construtor padrão necessário para o JPA
@@ -16,10 +21,6 @@ public class CodigoModulo {
             throw new IllegalArgumentException("Código do módulo não pode ser nulo ou vazio");
         }
         this.codigo = codigo;
-    }
-
-    public String getCodigo() {
-        return codigo;
     }
 
     // Sobrescreve equals e hashCode para garantir comparação por valor

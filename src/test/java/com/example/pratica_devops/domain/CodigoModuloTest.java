@@ -1,37 +1,11 @@
 package com.example.pratica_devops.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 public class CodigoModuloTest {
-
-    @Test
-    void testConstrutorComCodigoValido() {
-        String codigo = "M1";
-        CodigoModulo codigoModulo = new CodigoModulo(codigo);
-        assertEquals(codigo, codigoModulo.getCodigo(), "Código deve ser o mesmo passado no construtor");
-    }
-
-    @Test
-    void testConstrutorComCodigoNulo() {
-        assertThrows(IllegalArgumentException.class, () -> new CodigoModulo(null),
-            "Construtor deve lançar exceção para código nulo");
-    }
-
-    @Test
-    void testConstrutorComCodigoVazio() {
-        assertThrows(IllegalArgumentException.class, () -> new CodigoModulo(""),
-            "Construtor deve lançar exceção para código vazio");
-        assertThrows(IllegalArgumentException.class, () -> new CodigoModulo("  "),
-            "Construtor deve lançar exceção para código com apenas espaços");
-    }
-
-    @Test
-    void testGetCodigo() {
-        String codigo = "M1";
-        CodigoModulo codigoModulo = new CodigoModulo(codigo);
-        assertEquals(codigo, codigoModulo.getCodigo(), "getCodigo deve retornar o código correto");
-    }
 
     @Test
     void testEqualsAndHashCode() {

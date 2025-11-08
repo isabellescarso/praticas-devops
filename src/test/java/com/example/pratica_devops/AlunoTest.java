@@ -1,12 +1,14 @@
 package com.example.pratica_devops;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import com.example.pratica_devops.domain.Aluno;
-import com.example.pratica_devops.domain.Modulo;
 import com.example.pratica_devops.domain.Assinatura;
 import com.example.pratica_devops.domain.CodigoModulo;
+import com.example.pratica_devops.domain.Modulo;
 
 public class AlunoTest {
 
