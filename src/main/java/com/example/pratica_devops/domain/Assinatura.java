@@ -1,6 +1,7 @@
 package com.example.pratica_devops.domain;
 
 import java.util.Objects;
+
 import jakarta.persistence.Embeddable;
 
 @Embeddable
