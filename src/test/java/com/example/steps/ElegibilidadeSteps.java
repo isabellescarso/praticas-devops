@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.pratica_devops.domain.Aluno;
-import com.example.pratica_devops.service.ElegibilidadeService;
 import com.example.pratica_devops.domain.Modulo;
+import com.example.pratica_devops.service.ElegibilidadeService;
 
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.E;
@@ -15,7 +15,7 @@ import io.cucumber.java.pt.Quando;
 public class ElegibilidadeSteps {
     private Aluno aluno;
     private Modulo modulo;
-    private ElegibilidadeService service = new ElegibilidadeService();
+    private ElegibilidadeService service;
 
     @Dado("que existe um aluno")
     public void queExisteUmAluno() {

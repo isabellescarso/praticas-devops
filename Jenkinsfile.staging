@@ -1,35 +1,38 @@
 pipeline {
-  agent any
+  agent any  // Define que o pipeline pode rodar em qualquer agente Jenkins disponível
 
   stages {
-    stage('Checkout') {
+    stage('Checkout') {  // Estágio para obter o código fonte
       steps {
-        checkout scm
+        checkout scm  // Faz checkout do código do Source Control Management (Git, etc.)
       }
     }
 
-    stage('Start container') {
+    stage('Start container') {  // Estágio para iniciar o container Docker
       steps {
-        echo 'Starting container from Docker Hub...'
-        bat 'docker-compose -f docker-compose.staging.yml pull' // Baixa a imagem do Docker Hub
-        bat 'docker-compose -f docker-compose.staging.yml up -d --no-color'
-        sleep time: 60, unit: 'SECONDS' // Aumenta o tempo para o serviço Spring Boot iniciar
-        bat 'docker-compose -f docker-compose.staging.yml logs' // Verifica os logs para conferir o status do Spring Boot
-        bat 'docker-compose -f docker-compose.staging.yml ps' // Verifica o status do container
+        echo 'Starting container from Docker Hub...'  // Mensagem informativa
+        bat 'docker-compose -f docker-compose.staging.yml pull'  // Baixa a imagem mais recente do Docker Hub
+        bat 'docker-compose -f docker-compose.staging.yml up -d --no-color'  // Inicia os containers em modo detached (background)
+        sleep time: 60, unit: 'SECONDS'  // Aguarda 60 segundos para o serviço Spring Boot inicializar completamente
+        bat 'docker-compose -f docker-compose.staging.yml logs'  // Exibe os logs dos containers para diagnóstico
+        bat 'docker-compose -f docker-compose.staging.yml ps'    // Mostra o status atual dos containers
       }
     }
 
-    stage('Run tests against the container') {
+    stage('Run tests against the container') {  // Estágio para testar se o serviço está respondendo
       steps {
-        bat 'curl http://localhost:8686 || echo "Service not responding"'
+        bat 'curl http://localhost:8686 || echo "Service not responding"'  // Tenta acessar o serviço na porta 8686, se falhar mostra mensagem de erro
       }
     }
   }
 
-  post {
-    always {
-      echo 'Pipeline completed'
+  post {  // Bloco executado após todos os estágios, independente do resultado
+    always {  // Sempre será executado
+      echo 'Pipeline completed'  // Mensagem indicando que o pipeline foi concluído
       // Não derruba mais o container aqui
     }
   }
 }
+
+
+

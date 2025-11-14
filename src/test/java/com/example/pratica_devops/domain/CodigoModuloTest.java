@@ -26,3 +26,4 @@ public class CodigoModuloTest {
         assertTrue(str.contains("codigo=M1"), "toString deve conter o código");
     }
 }
+

@@ -7,7 +7,7 @@ import com.example.pratica_devops.domain.Aluno;
 import com.example.pratica_devops.domain.Modulo;
 
 public class ElegibilidadeService {
-    private List<Aluno> alunosElegiveis = new ArrayList<>();
+    private final List<Aluno> alunosElegiveis = new ArrayList<>();
     private Modulo modulo;
 
     public void setModulo(Modulo modulo) {
