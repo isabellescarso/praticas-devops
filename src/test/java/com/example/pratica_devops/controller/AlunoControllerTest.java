@@ -1,13 +1,16 @@
 package com.example.pratica_devops.controller;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -25,7 +28,7 @@ public class AlunoControllerTest {
     private AlunoController alunoController;
     
     @Test
-    void testGetAlunos() {
+    void testGetAlunos_DeveRetornarListaDeAlunos() {
         // Arrange
         List<AlunoDTO> expectedDTOs = Arrays.asList(
             new AlunoDTO(1L, true, true),
@@ -37,8 +40,43 @@ public class AlunoControllerTest {
         List<AlunoDTO> actualDTOs = alunoController.getAlunos();
 
         // Assert
-        assertEquals(expectedDTOs, actualDTOs, "Deve retornar a lista de DTOs do serviço");
-        verify(alunoService).getAllAlunos();
+        assertNotNull(actualDTOs);
+        assertEquals(2, actualDTOs.size());
+        assertEquals(expectedDTOs, actualDTOs);
+        verify(alunoService, times(1)).getAllAlunos();
+    }
+
+    @Test
+    void testGetAlunos_DeveRetornarListaVazia() {
+        // Arrange
+        when(alunoService.getAllAlunos()).thenReturn(Collections.emptyList());
+
+        // Act
+        List<AlunoDTO> actualDTOs = alunoController.getAlunos();
+
+        // Assert
+        assertNotNull(actualDTOs);
+        assertEquals(0, actualDTOs.size());
+        verify(alunoService, times(1)).getAllAlunos();
+    }
+
+    @Test
+    void testGetAlunos_DeveRetornarListaComUmAluno() {
+        // Arrange
+        List<AlunoDTO> expectedDTOs = Arrays.asList(
+            new AlunoDTO(1L, true, true)
+        );
+        when(alunoService.getAllAlunos()).thenReturn(expectedDTOs);
+
+        // Act
+        List<AlunoDTO> actualDTOs = alunoController.getAlunos();
+
+        // Assert
+        assertNotNull(actualDTOs);
+        assertEquals(1, actualDTOs.size());
+        assertEquals(true, actualDTOs.get(0).isAssinaturaPremium());
+        assertEquals(true, actualDTOs.get(0).isAssinaturaAtiva());
+        verify(alunoService, times(1)).getAllAlunos();
     }
 }
 
