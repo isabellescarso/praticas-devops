@@ -1,21 +1,24 @@
-version: '4'
+version: '3.8'
 
 services:
-  database:
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: sapi
-    volumes:
-      - db-volume:/var/lib/postgresql/data
-
   api:
     image: isabellemunhozscarso/devops:latest
-    networks:
-      - default  # Certifique-se de que está usando a rede adequada
-    environment:
-      DB_HOST: database
+    container_name: praticas-devops-staging
     ports:
       - "8686:8080"
-volumes:
-  db-volume:
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_H2_CONSOLE_ENABLED=true
+      - SPRING_H2_CONSOLE_PATH=/h2-console
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.H2Dialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - staging-network
+
+networks:
+  staging-network:
+    driver: bridge
