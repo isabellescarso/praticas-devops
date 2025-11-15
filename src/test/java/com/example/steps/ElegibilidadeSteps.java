@@ -15,7 +15,7 @@ import io.cucumber.java.pt.Quando;
 public class ElegibilidadeSteps {
     private Aluno aluno;
     private Modulo modulo;
-    private ElegibilidadeService service;
+    private final ElegibilidadeService service = new ElegibilidadeService();
 
     @Dado("que existe um aluno")
     public void queExisteUmAluno() {
