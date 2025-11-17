@@ -83,4 +83,82 @@ public class ModuloTest {
         
         assertNull(modulo.getCodigo(), "getCodigo() deve retornar null quando codigoModulo é null");
     }
+
+    @Test
+    void testToString_DeveConterInformacoesDoModulo() {
+        // Arrange
+        Modulo modulo = new Modulo("MOD001", true);
+        modulo.setId(1L);
+        
+        // Act
+        String resultado = modulo.toString();
+        
+        // Assert
+        assertNotNull(resultado);
+        assertTrue(resultado.contains("Modulo"));
+    }
+
+    @Test
+    void testEquals_ModulosIguais() {
+        // Arrange
+        CodigoModulo codigo1 = new CodigoModulo("MOD001");
+        CodigoModulo codigo2 = new CodigoModulo("MOD001");
+        Modulo modulo1 = new Modulo(codigo1, true);
+        modulo1.setId(1L);
+        Modulo modulo2 = new Modulo(codigo2, true);
+        modulo2.setId(1L);
+        
+        // Act & Assert
+        assertEquals(modulo1, modulo2);
+        assertEquals(modulo1.hashCode(), modulo2.hashCode());
+    }
+
+    @Test
+    void testEquals_ModulosDiferentes() {
+        // Arrange
+        Modulo modulo1 = new Modulo("MOD001", true);
+        modulo1.setId(1L);
+        Modulo modulo2 = new Modulo("MOD002", false);
+        modulo2.setId(2L);
+        
+        // Act & Assert
+        assertFalse(modulo1.equals(modulo2));
+    }
+
+    @Test
+    void testHashCode_DeveSerConsistente() {
+        // Arrange
+        Modulo modulo = new Modulo("MOD001", true);
+        modulo.setId(1L);
+        
+        // Act
+        int hash1 = modulo.hashCode();
+        int hash2 = modulo.hashCode();
+        
+        // Assert
+        assertEquals(hash1, hash2);
+    }
+
+    @Test
+    void testConstrutorAllArgs() {
+        // Arrange
+        CodigoModulo codigo = new CodigoModulo("MOD123");
+        
+        // Act
+        Modulo modulo = new Modulo(1L, true, codigo);
+        
+        // Assert
+        assertEquals(1L, modulo.getId());
+        assertTrue(modulo.isValido());
+        assertEquals(codigo, modulo.getCodigoModulo());
+    }
+
+    @Test
+    void testConstrutorNoArgs() {
+        // Act
+        Modulo modulo = new Modulo();
+        
+        // Assert
+        assertNotNull(modulo);
+    }
 }

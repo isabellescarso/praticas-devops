@@ -64,7 +64,7 @@ public class AlunoControllerTest {
     void testGetAlunos_DeveRetornarListaComUmAluno() {
         // Arrange
         List<AlunoDTO> expectedDTOs = Arrays.asList(
-            new AlunoDTO(1L, "Pedro Costa", true, true)
+            new AlunoDTO(1L, "aluno", true, true)
         );
         when(alunoService.getAllAlunos()).thenReturn(expectedDTOs);
 

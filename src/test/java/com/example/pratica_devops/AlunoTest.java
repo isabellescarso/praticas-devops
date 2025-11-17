@@ -190,4 +190,78 @@ public class AlunoTest {
         // Assert
         assertEquals("aluno nome", aluno.getNome());
     }
+
+    @Test
+    void testToString_DeveConterInformacoesDoAluno() {
+        // Arrange
+        Aluno aluno = new Aluno("aluno", true);
+        aluno.setId(1L);
+        
+        // Act
+        String resultado = aluno.toString();
+        
+        // Assert
+        assertNotNull(resultado);
+        assertTrue(resultado.contains("Aluno"));
+    }
+
+    @Test
+    void testEquals_AlunosIguais() {
+        // Arrange
+        Aluno aluno1 = new Aluno("aluno", true);
+        aluno1.setId(1L);
+        Aluno aluno2 = new Aluno("aluno", true);
+        aluno2.setId(1L);
+        
+        // Act & Assert
+        assertEquals(aluno1, aluno2);
+        assertEquals(aluno1.hashCode(), aluno2.hashCode());
+    }
+
+    @Test
+    void testEquals_AlunosDiferentes() {
+        // Arrange
+        Aluno aluno1 = new Aluno("aluno1", true);
+        aluno1.setId(1L);
+        Aluno aluno2 = new Aluno("aluno2", false);
+        aluno2.setId(2L);
+        
+        // Act & Assert
+        assertFalse(aluno1.equals(aluno2));
+    }
+
+    @Test
+    void testHashCode_DeveSerConsistente() {
+        // Arrange
+        Aluno aluno = new Aluno("aluno", true);
+        aluno.setId(1L);
+        
+        // Act
+        int hash1 = aluno.hashCode();
+        int hash2 = aluno.hashCode();
+        
+        // Assert
+        assertEquals(hash1, hash2);
+    }
+
+    @Test
+    void testConstrutorAllArgs() {
+        // Arrange & Act
+        Assinatura assinatura = new Assinatura(true, true);
+        Aluno aluno = new Aluno(1L, "aluno", assinatura);
+        
+        // Assert
+        assertEquals(1L, aluno.getId());
+        assertEquals("aluno", aluno.getNome());
+        assertEquals(assinatura, aluno.getAssinatura());
+    }
+
+    @Test
+    void testConstrutorNoArgs() {
+        // Act
+        Aluno aluno = new Aluno();
+        
+        // Assert
+        assertNotNull(aluno);
+    }
 }
