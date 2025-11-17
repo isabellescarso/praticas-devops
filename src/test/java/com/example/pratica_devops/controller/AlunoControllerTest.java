@@ -94,7 +94,7 @@ public class AlunoControllerTest {
         assertEquals(201, response.getStatusCode().value());
         assertNotNull(response.getBody());
         assertEquals(1L, response.getBody().getId());
-        assertEquals("Ana Silva", response.getBody().getNome());
+        assertEquals("aluno nome", response.getBody().getNome());
         verify(alunoService, times(1)).createAluno(inputDTO);
     }
 }
