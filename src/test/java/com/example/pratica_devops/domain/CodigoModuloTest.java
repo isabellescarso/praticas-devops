@@ -97,12 +97,21 @@ public class CodigoModuloTest {
     }
 
     @Test
-    void testGetterESetter() {
-        CodigoModulo codigo = new CodigoModulo("INICIAL");
-        assertEquals("INICIAL", codigo.getCodigo());
+    void testGetter() {
+        CodigoModulo codigo = new CodigoModulo("MOD123");
+        assertEquals("MOD123", codigo.getCodigo());
+    }
+
+    @Test
+    void testImutabilidade() {
+        // Value Object deve ser imutável - não deve ter setter
+        CodigoModulo codigo = new CodigoModulo("ORIGINAL");
+        assertEquals("ORIGINAL", codigo.getCodigo());
         
-        codigo.setCodigo("MODIFICADO");
-        assertEquals("MODIFICADO", codigo.getCodigo());
+        // Para mudar o valor, precisa criar nova instância
+        CodigoModulo novoCodigo = new CodigoModulo("NOVO");
+        assertEquals("NOVO", novoCodigo.getCodigo());
+        assertEquals("ORIGINAL", codigo.getCodigo()); // Original não muda
     }
 }
 

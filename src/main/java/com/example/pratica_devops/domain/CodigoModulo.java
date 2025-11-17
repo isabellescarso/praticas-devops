@@ -4,17 +4,14 @@ import java.util.Objects;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
+@Getter
+@NoArgsConstructor
 public class CodigoModulo {
 
-    @Getter
-    @Setter
     private String codigo;
-
-    // Construtor padrão necessário para o JPA
-    protected CodigoModulo() {}
 
     public CodigoModulo(String codigo) {
         if (codigo == null || codigo.trim().isEmpty()) {
