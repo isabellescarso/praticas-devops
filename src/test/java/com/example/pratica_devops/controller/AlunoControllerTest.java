@@ -31,8 +31,8 @@ public class AlunoControllerTest {
     void testGetAlunos_DeveRetornarListaDeAlunos() {
         // Arrange
         List<AlunoDTO> expectedDTOs = Arrays.asList(
-            new AlunoDTO(1L, true, true),
-            new AlunoDTO(2L, false, true)
+            new AlunoDTO(1L, "nome1", true, true),
+            new AlunoDTO(2L, "nome2", false, true)
         );
         when(alunoService.getAllAlunos()).thenReturn(expectedDTOs);
 
@@ -64,7 +64,7 @@ public class AlunoControllerTest {
     void testGetAlunos_DeveRetornarListaComUmAluno() {
         // Arrange
         List<AlunoDTO> expectedDTOs = Arrays.asList(
-            new AlunoDTO(1L, true, true)
+            new AlunoDTO(1L, "Pedro Costa", true, true)
         );
         when(alunoService.getAllAlunos()).thenReturn(expectedDTOs);
 

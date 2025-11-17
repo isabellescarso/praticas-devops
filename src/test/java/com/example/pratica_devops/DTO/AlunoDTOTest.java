@@ -45,12 +45,14 @@ public class AlunoDTOTest {
     void testConstructorWithParameters() {
         // Arrange & Act
         Long id = 1L;
+        String nome = "Isabelle";
         boolean premium = true;
         boolean ativa = true;
-        AlunoDTO dto = new AlunoDTO(id, premium, ativa);
+        AlunoDTO dto = new AlunoDTO(id, nome, premium, ativa);
 
         // Assert
         assertEquals(id, dto.getId(), "ID deve ser configurado corretamente pelo construtor");
+        assertEquals(nome, dto.getNome(), "Nome deve ser configurado corretamente pelo construtor");
         assertTrue(dto.isAssinaturaPremium(), "Premium deve ser configurado corretamente pelo construtor");
         assertTrue(dto.isAssinaturaAtiva(), "Status da assinatura deve ser configurado corretamente pelo construtor");
     }
