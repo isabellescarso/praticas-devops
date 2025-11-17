@@ -6,9 +6,21 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "tb_aluno")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class Aluno {
 
     @Id
@@ -19,9 +31,6 @@ public class Aluno {
 
     @Embedded
     private Assinatura assinatura;
-
-    // Construtor padrão necessário para o JPA
-    protected Aluno() {}
 
     public Aluno(String nome, Assinatura assinatura) {
         this.nome = nome;
@@ -39,31 +48,6 @@ public class Aluno {
 
     public Aluno(boolean premium) {
         this.assinatura = new Assinatura(premium, true);
-    }
-
-    // Getters e Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public Assinatura getAssinatura() {
-        return assinatura;
-    }
-
-    public void setAssinatura(Assinatura assinatura) {
-        this.assinatura = assinatura;
     }
 
     public void setAssinaturaAtiva(boolean ativa) {
