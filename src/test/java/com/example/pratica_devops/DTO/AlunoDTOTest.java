@@ -2,6 +2,7 @@ package com.example.pratica_devops.DTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
@@ -71,5 +72,36 @@ public class AlunoDTOTest {
         assertEquals(1L, dto.getId(), "ID deve ser igual ao do aluno");
         assertFalse(dto.isAssinaturaPremium(), "Premium deve ser falso quando assinatura é nula");
         assertFalse(dto.isAssinaturaAtiva(), "Status da assinatura deve ser falso quando assinatura é nula");
+    }
+
+    @Test
+    void testToEntity_ComIdNulo() {
+        // Arrange
+        AlunoDTO dto = new AlunoDTO(null, "aluno", false, true);
+
+        // Act
+        Aluno aluno = dto.toEntity();
+
+        // Assert
+        assertNotNull(aluno, "Aluno não deve ser nulo");
+        assertEquals("aluno", aluno.getNome(), "Nome deve ser igual ao do DTO");
+        assertFalse(aluno.getAssinatura().isPremium(), "Premium deve ser igual ao do DTO");
+        assertTrue(aluno.getAssinatura().isAtiva(), "Ativa deve ser igual ao do DTO");
+    }
+
+    @Test
+    void testToEntity_ComId() {
+        // Arrange
+        AlunoDTO dto = new AlunoDTO(5L, "aluno", true, false);
+
+        // Act
+        Aluno aluno = dto.toEntity();
+
+        // Assert
+        assertNotNull(aluno, "Aluno não deve ser nulo");
+        assertEquals(5L, aluno.getId(), "ID deve ser igual ao do DTO");
+        assertEquals("aluno", aluno.getNome(), "Nome deve ser igual ao do DTO");
+        assertTrue(aluno.getAssinatura().isPremium(), "Premium deve ser igual ao do DTO");
+        assertFalse(aluno.getAssinatura().isAtiva(), "Ativa deve ser igual ao do DTO");
     }
 }
