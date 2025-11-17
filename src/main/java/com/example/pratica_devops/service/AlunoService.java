@@ -21,4 +21,11 @@ public class AlunoService {
                 .map(AlunoDTO::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    public AlunoDTO createAluno(AlunoDTO alunoDTO) {
+        var aluno = alunoDTO.toEntity();
+        var alunoSalvo = alunoRepository.save(aluno);
+        return AlunoDTO.fromEntity(alunoSalvo);
+    }
 }
+

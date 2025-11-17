@@ -15,11 +15,23 @@ public class Aluno {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String nome;
+
     @Embedded
     private Assinatura assinatura;
 
     // Construtor padrão necessário para o JPA
     protected Aluno() {}
+
+    public Aluno(String nome, Assinatura assinatura) {
+        this.nome = nome;
+        this.assinatura = assinatura;
+    }
+
+    public Aluno(String nome, boolean premium) {
+        this.nome = nome;
+        this.assinatura = new Assinatura(premium, true);
+    }
 
     public Aluno(Assinatura assinatura) {
         this.assinatura = assinatura;
@@ -36,6 +48,14 @@ public class Aluno {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public Assinatura getAssinatura() {

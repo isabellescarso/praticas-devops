@@ -5,6 +5,7 @@ import com.example.pratica_devops.domain.Aluno;
 public class AlunoDTO {
 
     private Long id;
+    private String nome;
     private boolean assinaturaPremium;
     private boolean assinaturaAtiva;
 
@@ -12,8 +13,9 @@ public class AlunoDTO {
     public AlunoDTO() {}
 
     // Construtor com todos os parâmetros
-    public AlunoDTO(Long id, boolean assinaturaPremium, boolean assinaturaAtiva) {
+    public AlunoDTO(Long id, String nome, boolean assinaturaPremium, boolean assinaturaAtiva) {
         this.id = id;
+        this.nome = nome;
         this.assinaturaPremium = assinaturaPremium;
         this.assinaturaAtiva = assinaturaAtiva;
     }
@@ -25,6 +27,14 @@ public class AlunoDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public boolean isAssinaturaPremium() {
@@ -47,6 +57,7 @@ public class AlunoDTO {
     public static AlunoDTO fromEntity(Aluno aluno) {
         AlunoDTO dto = new AlunoDTO();
         dto.setId(aluno.getId());
+        dto.setNome(aluno.getNome());
 
         if (aluno.getAssinatura() != null) {
             dto.setAssinaturaPremium(aluno.getAssinatura().isPremium());
@@ -54,5 +65,15 @@ public class AlunoDTO {
         }
 
         return dto;
+    }
+
+    // Método de conversão de AlunoDTO para Aluno
+    public Aluno toEntity() {
+        Aluno aluno = new Aluno(this.nome, this.assinaturaPremium);
+        if (this.id != null) {
+            aluno.setId(this.id);
+        }
+        aluno.setAssinaturaAtiva(this.assinaturaAtiva);
+        return aluno;
     }
 }
