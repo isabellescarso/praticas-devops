@@ -118,4 +118,26 @@ public class AlunoServiceTest {
         
         verify(alunoRepository, times(1)).findAll();
     }
+
+    @Test
+    void testCreateAluno_DeveSalvarERetornarDTO() {
+        // Arrange
+        AlunoDTO inputDTO = new AlunoDTO(null, "aluno", true, true);
+        Aluno alunoSaved = new Aluno("aluno", true);
+        alunoSaved.setId(1L);
+        alunoSaved.setAssinaturaAtiva(true);
+
+        when(alunoRepository.save(org.mockito.ArgumentMatchers.any(Aluno.class))).thenReturn(alunoSaved);
+
+        // Act
+        AlunoDTO result = alunoService.createAluno(inputDTO);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        assertEquals("aluno", result.getNome());
+        assertTrue(result.isAssinaturaPremium());
+        assertTrue(result.isAssinaturaAtiva());
+        verify(alunoRepository, times(1)).save(org.mockito.ArgumentMatchers.any(Aluno.class));
+    }
 }

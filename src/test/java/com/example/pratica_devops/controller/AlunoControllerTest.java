@@ -78,6 +78,25 @@ public class AlunoControllerTest {
         assertEquals(true, actualDTOs.get(0).isAssinaturaAtiva());
         verify(alunoService, times(1)).getAllAlunos();
     }
+
+    @Test
+    void testCreateAluno_DeveRetornarAlunoComStatus201() {
+        // Arrange
+        AlunoDTO inputDTO = new AlunoDTO(null, "aluno nome", true, true);
+        AlunoDTO expectedDTO = new AlunoDTO(1L, "aluno nome", true, true);
+        when(alunoService.createAluno(inputDTO)).thenReturn(expectedDTO);
+
+        // Act
+        var response = alunoController.createAluno(inputDTO);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(201, response.getStatusCode().value());
+        assertNotNull(response.getBody());
+        assertEquals(1L, response.getBody().getId());
+        assertEquals("Ana Silva", response.getBody().getNome());
+        verify(alunoService, times(1)).createAluno(inputDTO);
+    }
 }
 
 

@@ -165,4 +165,29 @@ public class AlunoTest {
         // Assert
         assertTrue(elegivel, "Aluno premium com módulo válido e código deve ser elegível");
     }
+
+    @Test
+    void testConstrutorComNomeEAssinatura() {
+        // Arrange & Act
+        Assinatura assinatura = new Assinatura(true, true);
+        Aluno aluno = new Aluno("aluno nome", assinatura);
+        
+        // Assert
+        assertEquals("aluno nome", aluno.getNome());
+        assertEquals(assinatura, aluno.getAssinatura());
+        assertTrue(aluno.getAssinatura().isPremium());
+        assertTrue(aluno.getAssinatura().isAtiva());
+    }
+
+    @Test
+    void testSetNome() {
+        // Arrange
+        Aluno aluno = new Aluno(true);
+        
+        // Act
+            aluno.setNome("aluno nome");
+            
+        // Assert
+        assertEquals("aluno nome", aluno.getNome());
+    }
 }
