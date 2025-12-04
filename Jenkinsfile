@@ -156,11 +156,14 @@ pipeline {
         stage('STAGING - Start Container') {
             steps {
                 echo 'Iniciando containers no ambiente de staging...'
-                // Para e remove containers antigos se existirem
-                bat 'docker-compose -f docker-compose.staging.yml down || echo "Nenhum container para remover"'
+                // Para e remove containers antigos se existirem (incluindo órfãos)
+                bat 'docker-compose -f docker-compose.staging.yml down --remove-orphans || echo "Nenhum container para remover"'
+                
+                // Remove container específico se existir
+                bat 'docker rm -f praticas-devops-staging || echo "Container não existe"'
                 
                 // Inicia os containers em modo detached (background)
-                bat 'docker-compose -f docker-compose.staging.yml up -d --no-color'
+                bat 'docker-compose -f docker-compose.staging.yml up -d --no-color --force-recreate'
                 
                 // Aguarda a aplicação inicializar completamente
                 echo 'Aguardando 60 segundos para a aplicação inicializar...'
