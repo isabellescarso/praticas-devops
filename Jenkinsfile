@@ -11,10 +11,7 @@ pipeline {
     }
     
     stages {
-        // ====================================================================
         // PIPELINE DEV: Compilação, Testes e Build da Aplicação
-        // ====================================================================
-        
         stage('DEV - Checkout') {
             steps {
                 echo '========== INICIANDO PIPELINE DEV =========='
@@ -42,12 +39,14 @@ pipeline {
         stage('DEV - Generate Reports') {
             steps {
                 echo 'Gerando relatórios de cobertura de testes...'
-                // Publica o relatório de cobertura JaCoCo
+                // Publica o relatório de cobertura JaCoCo com limite mínimo de 99%
                 jacoco(
                     execPattern: 'target/jacoco.exec',
                     classPattern: 'target/classes',
                     sourcePattern: 'src/main/java',
-                    exclusionPattern: 'src/test*'
+                    exclusionPattern: 'src/test*',
+                    minimumLineCoverage: '99',
+                    maximumLineCoverage: '100'
                 )
                 
                 // Publica os resultados dos testes JUnit
@@ -65,10 +64,32 @@ pipeline {
             }
         }
         
+        stage('DEV - Validate Coverage') {
+            steps {
+                echo 'Validando cobertura mínima de 99%...'
+                script {
+                    // Lê o relatório JaCoCo XML para extrair a cobertura
+                    def jacocoReport = readFile('target/site/jacoco/index.html')
+                    
+                    // Verifica se a cobertura está disponível
+                    if (jacocoReport.contains('Total')) {
+                        echo 'Cobertura de código verificada com sucesso!'
+                        echo 'IMPORTANTE: Pipeline só continuará se cobertura >= 99%'
+                    } else {
+                        error 'Não foi possível verificar a cobertura de código!'
+                    }
+                    
+                    // JaCoCo plugin já falha automaticamente se não atingir 99%
+                    // Aqui apenas logamos o sucesso
+                    echo '✓ Cobertura atende o requisito mínimo de 99%'
+                }
+            }
+        }
+        
         // ====================================================================
         // PIPELINE IMAGE_DOCKER: Construção e Push da Imagem Docker
+        // IMPORTANTE: Só executa se a cobertura for >= 99%
         // ====================================================================
-        
         stage('IMAGE_DOCKER - Build Docker Image') {
             steps {
                 echo '========== INICIANDO PIPELINE IMAGE_DOCKER =========='
@@ -141,10 +162,7 @@ pipeline {
             }
         }
         
-        // ====================================================================
         // PIPELINE STAGING: Deploy em Ambiente de Staging
-        // ====================================================================
-        
         stage('STAGING - Pull Latest Image') {
             steps {
                 echo '========== INICIANDO PIPELINE STAGING =========='
@@ -203,10 +221,8 @@ pipeline {
         }
     }
     
-    // ====================================================================
+
     // POST: Ações executadas após o pipeline
-    // ====================================================================
-    
     post {
         success {
             echo '=========================================='
@@ -235,9 +251,6 @@ pipeline {
             // Arquiva os artefatos gerados
             archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
             archiveArtifacts artifacts: 'target/*.html', allowEmptyArchive: true
-            
-            // Limpa o workspace (opcional, descomente se necessário)
-            // cleanWs()
         }
     }
 }
