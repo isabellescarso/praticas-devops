@@ -14,7 +14,7 @@ pipeline {
         // PIPELINE DEV: Compilação, Testes e Build da Aplicação
         stage('DEV - Checkout') {
             steps {
-                echo '========== INICIANDO PIPELINE DEV =========='
+                echo 'Iniciando pipeline dev'
                 echo 'Fazendo checkout do código fonte...'
                 checkout scm  // Faz checkout do código do repositório Git
             }
@@ -145,7 +145,7 @@ pipeline {
         
         stage('STAGING - Pull Latest Image') {
             steps {
-                echo '========== INICIANDO PIPELINE STAGING =========='
+                echo 'Iniciando pipeline staging'
                 echo 'Baixando imagem do Docker Hub...'
                 bat 'docker-compose -f docker-compose.staging.yml pull'
             }
@@ -191,22 +191,15 @@ pipeline {
     
     post {
         success {
-            echo '=========================================='
             echo 'PIPELINE EXECUTADO COM SUCESSO!'
-            echo '=========================================='
             echo "Imagem Docker: ${DOCKER_IMAGE}:${DOCKER_TAG}"
             echo "Build Number: ${BUILD_NUMBER}"
             echo "Staging URL: http://localhost:${STAGING_PORT}"
             echo "H2 Console: http://localhost:${STAGING_PORT}/h2-console"
-            echo '=========================================='
         }
         
         failure {
-            echo '=========================================='
-            echo 'PIPELINE FALHOU!'
-            echo '=========================================='
-            echo 'Verificar logs acima'
-            echo '=========================================='
+            echo 'PIPELINE FALHOU! Verificar logs acima'
             bat 'docker-compose -f docker-compose.staging.yml down || echo "Erro"'
         }
         
