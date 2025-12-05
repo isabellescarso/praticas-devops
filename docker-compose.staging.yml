@@ -1,6 +1,23 @@
 version: '3.8'
 
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-staging
+    ports:
+      - "5673:5672"   # AMQP protocol (porta diferente para não conflitar com dev)
+      - "15673:15672" # Management UI (porta diferente para não conflitar com dev)
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - staging-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   api:
     image: isabellemunhozscarso/devops:latest
     container_name: praticas-devops-staging
@@ -17,8 +34,16 @@ services:
       - SPRING_H2_CONSOLE_SETTINGS_WEB_ALLOW_OTHERS=true
       - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.H2Dialect
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     networks:
       - staging-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
 networks:
   staging-network:

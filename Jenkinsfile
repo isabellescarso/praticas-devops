@@ -106,11 +106,31 @@ pipeline {
                 echo 'Testando a imagem Docker localmente...'
                 script {
                     bat 'docker rm -f praticas-devops-test || echo "Container nao existe"'
-                    bat "docker run -d --name praticas-devops-test -p 8787:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    bat 'docker rm -f rabbitmq-test || echo "Container nao existe"'
+                    
+                    // Inicia RabbitMQ para teste
+                    bat 'docker run -d --name rabbitmq-test -p 5672:5672 -p 15672:15672 rabbitmq:3-management'
+                    echo 'Aguardando RabbitMQ inicializar...'
+                    sleep time: 15, unit: 'SECONDS'
+                    
+                    // Inicia a aplicação com variáveis de ambiente
+                    bat """docker run -d --name praticas-devops-test -p 8787:8080 ^
+                        -e RABBITMQ_HOST=host.docker.internal ^
+                        -e RABBITMQ_PORT=5672 ^
+                        -e RABBITMQ_USERNAME=guest ^
+                        -e RABBITMQ_PASSWORD=guest ^
+                        -e OPENAI_API_KEY= ^
+                        ${DOCKER_IMAGE}:${DOCKER_TAG}"""
+                    
+                    echo 'Aguardando aplicacao inicializar...'
                     sleep time: 30, unit: 'SECONDS'
                     bat 'docker ps | findstr praticas-devops-test'
+                    
+                    // Cleanup
                     bat 'docker stop praticas-devops-test'
                     bat 'docker rm praticas-devops-test'
+                    bat 'docker stop rabbitmq-test'
+                    bat 'docker rm rabbitmq-test'
                 }
             }
         }
