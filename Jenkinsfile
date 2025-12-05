@@ -188,7 +188,6 @@ pipeline {
             }
         }
     }
-    }
     
     post {
         success {
