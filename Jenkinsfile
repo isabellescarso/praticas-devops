@@ -6,6 +6,7 @@ pipeline {
         DOCKER_IMAGE = 'isabellemunhozscarso/devops'
         DOCKER_TAG = 'latest'
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials' // ID das credenciais do Docker Hub no Jenkins
+        OPENAI_API_KEY = credentials('openai-api-key') // ID da credencial da OpenAI API Key no Jenkins
         DEV_PORT = '8585'
         STAGING_PORT = '8686'
     }
@@ -119,7 +120,7 @@ pipeline {
                         -e RABBITMQ_PORT=5672 ^
                         -e RABBITMQ_USERNAME=guest ^
                         -e RABBITMQ_PASSWORD=guest ^
-                        -e OPENAI_API_KEY= ^
+                        -e OPENAI_API_KEY=%OPENAI_API_KEY% ^
                         ${DOCKER_IMAGE}:${DOCKER_TAG}"""
                     
                     echo 'Aguardando aplicacao inicializar...'

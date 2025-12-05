@@ -20,6 +20,7 @@ public class RabbitMQConfig {
     public static final String QUEUE_NAME = "course-completion-queue";
     public static final String ROUTING_KEY = "course.completed";
     
+    // Recebe as mensagens e decide para qual fila irá enviar com base na routing key 
     @Bean
     public TopicExchange coursesExchange() {
         return new TopicExchange(EXCHANGE_NAME);
@@ -38,6 +39,7 @@ public class RabbitMQConfig {
                 .with(ROUTING_KEY);
     }
     
+    //Convertedor de mensagens JSON
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
