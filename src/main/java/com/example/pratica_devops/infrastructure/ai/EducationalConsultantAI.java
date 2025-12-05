@@ -2,6 +2,7 @@ package com.example.pratica_devops.infrastructure.ai;
 
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
+import dev.langchain4j.service.V;
 
 //Interface AI Service - LangChain4J
 public interface EducationalConsultantAI {
@@ -20,5 +21,5 @@ public interface EducationalConsultantAI {
             ]
             """)
     @UserMessage("Estudante: {{name}}, Interesses: {{interests}}, Cursos concluídos: {{completed}}")
-    String recommend(String name, String interests, String completed);
+    String recommend(@V("name") String name, @V("interests") String interests, @V("completed") String completed);
 }
