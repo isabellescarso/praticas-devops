@@ -19,9 +19,7 @@ public class AiConfiguration {
     
     @Bean
     @ConditionalOnProperty(name = "openai.api-key")
-    public ChatLanguageModel chatLanguageModel(
-            @Value("${openai.api-key}") String apiKey,
-            @Value("${openai.model:gpt-4o-mini}") String model) {
+    public ChatLanguageModel chatLanguageModel(@Value("${openai.api-key}") String apiKey,@Value("${openai.model:gpt-4o-mini}") String model) {
         
         log.info("Configurando OpenAI: {}", model);
         return OpenAiChatModel.builder()
