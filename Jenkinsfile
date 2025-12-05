@@ -86,13 +86,10 @@ pipeline {
             }
         }
         
-        // ====================================================================
         // PIPELINE IMAGE_DOCKER: Construção e Push da Imagem Docker
         // IMPORTANTE: Só executa se a cobertura for >= 99%
-        // ====================================================================
         stage('IMAGE_DOCKER - Build Docker Image') {
             steps {
-                echo '========== INICIANDO PIPELINE IMAGE_DOCKER =========='
                 echo 'Construindo a imagem Docker da aplicação...'
                 script {
                     // Constrói a imagem Docker usando o Dockerfile
@@ -108,19 +105,10 @@ pipeline {
             steps {
                 echo 'Testando a imagem Docker localmente...'
                 script {
-                    // Remove container anterior se existir
-                    bat 'docker rm -f praticas-devops-test || echo "Container não existe ainda"'
-                    
-                    // Executa a imagem para verificar se inicia corretamente
+                    bat 'docker rm -f praticas-devops-test || echo "Container nao existe"'
                     bat "docker run -d --name praticas-devops-test -p 8787:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                    
-                    // Aguarda a aplicação inicializar
                     sleep time: 30, unit: 'SECONDS'
-                    
-                    // Verifica se o container está rodando
                     bat 'docker ps | findstr praticas-devops-test'
-                    
-                    // Para e remove o container de teste
                     bat 'docker stop praticas-devops-test'
                     bat 'docker rm praticas-devops-test'
                 }
@@ -131,7 +119,6 @@ pipeline {
             steps {
                 echo 'Fazendo push da imagem para o Docker Hub...'
                 script {
-                    // Faz login no Docker Hub usando as credenciais armazenadas no Jenkins
                     withCredentials([usernamePassword(
                         credentialsId: "${DOCKER_CREDENTIALS_ID}",
                         usernameVariable: 'DOCKER_USERNAME',
@@ -140,13 +127,8 @@ pipeline {
                         bat "docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%"
                     }
                     
-                    // Faz push da imagem latest
                     bat "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                    
-                    // Faz push da imagem com número do build
                     bat "docker push ${DOCKER_IMAGE}:build-${BUILD_NUMBER}"
-                    
-                    // Faz logout do Docker Hub
                     bat 'docker logout'
                 }
             }
@@ -154,79 +136,64 @@ pipeline {
         
         stage('IMAGE_DOCKER - Clean Local Images') {
             steps {
-                echo 'Limpando imagens Docker antigas localmente...'
+                echo 'Limpando imagens Docker antigas...'
                 script {
-                    // Remove imagens antigas para economizar espaço
-                    bat "docker rmi ${DOCKER_IMAGE}:build-${BUILD_NUMBER} || echo 'Imagem já removida'"
+                    bat "docker rmi ${DOCKER_IMAGE}:build-${BUILD_NUMBER} || echo 'Imagem removida'"
                 }
             }
         }
         
-        // PIPELINE STAGING: Deploy em Ambiente de Staging
         stage('STAGING - Pull Latest Image') {
             steps {
                 echo '========== INICIANDO PIPELINE STAGING =========='
-                echo 'Baixando a imagem mais recente do Docker Hub...'
+                echo 'Baixando imagem do Docker Hub...'
                 bat 'docker-compose -f docker-compose.staging.yml pull'
             }
         }
         
         stage('STAGING - Start Container') {
             steps {
-                echo 'Iniciando containers no ambiente de staging...'
-                // Para e remove containers antigos se existirem (incluindo órfãos)
-                bat 'docker-compose -f docker-compose.staging.yml down --remove-orphans || echo "Nenhum container para remover"'
-                
-                // Remove container específico se existir
-                bat 'docker rm -f praticas-devops-staging || echo "Container não existe"'
-                
-                // Inicia os containers em modo detached (background)
+                echo 'Iniciando containers no staging...'
+                bat 'docker-compose -f docker-compose.staging.yml down --remove-orphans || echo "Nenhum container"'
+                bat 'docker rm -f praticas-devops-staging || echo "Container nao existe"'
                 bat 'docker-compose -f docker-compose.staging.yml up -d --no-color --force-recreate'
-                
-                // Aguarda a aplicação inicializar completamente
-                echo 'Aguardando 60 segundos para a aplicação inicializar...'
+                echo 'Aguardando aplicacao inicializar...'
                 sleep time: 60, unit: 'SECONDS'
             }
         }
         
         stage('STAGING - Verify Deployment') {
             steps {
-                echo 'Verificando se o deployment foi bem-sucedido...'
-                // Exibe os logs dos containers
+                echo 'Verificando deployment...'
                 bat 'docker-compose -f docker-compose.staging.yml logs'
-                
-                // Mostra o status dos containers
                 bat 'docker-compose -f docker-compose.staging.yml ps'
             }
         }
         
         stage('STAGING - Health Check') {
             steps {
-                echo 'Executando health check no ambiente de staging...'
+                echo 'Executando health check...'
                 script {
-                    // Tenta acessar o serviço para verificar se está respondendo
                     def healthCheck = bat(
                         script: "curl http://localhost:${STAGING_PORT} || exit 0",
                         returnStatus: true
                     )
                     
                     if (healthCheck == 0) {
-                        echo 'Health check bem-sucedido! Aplicação está respondendo.'
+                        echo 'Health check OK!'
                     } else {
-                        echo 'AVISO: Health check falhou. Verificar logs acima.'
-                        // Não falha o pipeline, apenas avisa
+                        echo 'Health check falhou'
                     }
                 }
             }
         }
     }
+    }
     
-
-    // POST: Ações executadas após o pipeline
     post {
         success {
             echo '=========================================='
-            echo '✓ PIPELINE EXECUTADO COM SUCESSO!'
+            echo 'PIPELINE EXECUTADO COM SUCESSO!'
             echo '=========================================='
             echo "Imagem Docker: ${DOCKER_IMAGE}:${DOCKER_TAG}"
             echo "Build Number: ${BUILD_NUMBER}"
@@ -237,18 +204,15 @@ pipeline {
         
         failure {
             echo '=========================================='
-            echo '✗ PIPELINE FALHOU!'
+            echo 'PIPELINE FALHOU!'
             echo '=========================================='
-            echo 'Verifique os logs acima para mais detalhes.'
+            echo 'Verificar logs acima'
             echo '=========================================='
-            
-            // Em caso de falha, tenta parar os containers
-            bat 'docker-compose -f docker-compose.staging.yml down || echo "Erro ao parar containers"'
+            bat 'docker-compose -f docker-compose.staging.yml down || echo "Erro"'
         }
         
         always {
-            echo 'Pipeline finalizado.'
-            // Arquiva os artefatos gerados
+            echo 'Pipeline finalizado'
             archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
             archiveArtifacts artifacts: 'target/*.html', allowEmptyArchive: true
         }
